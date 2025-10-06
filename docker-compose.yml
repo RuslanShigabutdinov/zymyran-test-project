@@ -1,6 +1,7 @@
 services:
   # PHP Application
   app:
+    image: zymyran-app
     build:
       context: .
       dockerfile: Dockerfile
@@ -18,6 +19,32 @@ services:
       - DB_DATABASE=${DB_DATABASE}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
+
+  task:
+    image: zymyran-app
+    container_name: dockerized-laravel-scheduler
+    working_dir: /var/www/html
+    command: php artisan schedule:work
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    environment:
+      - DB_HOST=db
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - QUEUE_CONNECTION=redis
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - REDIS_HOST=redis
+      - APP_ENV=${APP_ENV:-local}
+    depends_on:
+      - app
+      - db
+      - redis
+    networks:
+      - dockerized-laravel-network
 
   # Nginx Web Server
   webserver:
@@ -59,6 +86,21 @@ services:
       - dockerized-laravel-network
     ports:
       - "6379:6379"
+
+  # pgAdmin (Web UI for PostgreSQL)
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: dockerized-laravel-pgadmin
+    restart: unless-stopped
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - "5050:80"
+    networks:
+      - dockerized-laravel-network
+    depends_on:
+      - db
 
 # Networks
 networks:

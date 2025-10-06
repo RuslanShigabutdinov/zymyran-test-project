@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
+use App\Observers\KaspiProductObserver;
+use App\Models\KaspiProduct;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -19,6 +22,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        KaspiProduct::observe(KaspiProductObserver::class);
     }
 }

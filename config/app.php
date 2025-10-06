@@ -123,4 +123,5 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'company_name' => env('COMPANY_NAME', "GGG-Gadget")
 ];
