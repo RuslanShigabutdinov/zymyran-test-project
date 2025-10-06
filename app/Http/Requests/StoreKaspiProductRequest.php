@@ -26,6 +26,7 @@ class StoreKaspiProductRequest extends FormRequest
                 'required', 
                 'unique:kaspi_products,product_url',
                 'starts_with:https://kaspi.kz/shop/p/',
+                'url:https',
             ],
         ];
     }

@@ -11,7 +11,7 @@ class UpdateKaspiProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class UpdateKaspiProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'product_url' => [
+                'required', 
+                'unique:kaspi_products,product_url',
+                'starts_with:https://kaspi.kz/shop/p/',
+            ],
         ];
     }
 }
