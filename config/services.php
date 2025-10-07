@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'google_sheets' => [
+        'service_account_json' => env('GOOGLE_SERVICE_ACCOUNT_JSON'),
+        'sheet_id'             => env('GOOGLE_SHEETS_ID'),
+        'range'                => env('GOOGLE_SHEETS_RANGE', 'Reports!A:D'),
+    ],
+
 ];

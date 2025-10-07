@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 
 use App\Models\KaspiProduct;
 use App\Services\KaspiProductService;
+use App\Services\GoogleSpreadsheetService;
 
 class KaspiMonitor extends Command
 {
@@ -23,11 +24,13 @@ class KaspiMonitor extends Command
      */
     protected $description = 'Check each KaspiProduct entry to find all products that have lower prices';
 
-    /**
-     * Execute the console command.
-     */
-    public function handle(KaspiProductService $service) {
+    public function handle(
+        KaspiProductService $service,
+        GoogleSpreadsheetService $sheets
+        ) {
         $items = KaspiProduct::all();
+        if($items)
+            $sheets->generateReportTitle();
         foreach($items as $item) {
             $this->info("Checking product #{$item->id}");
             $service->checkProductPrices($item);
